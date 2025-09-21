@@ -1,6 +1,6 @@
 
 pipeline{
-    agent {label 'linux'}
+    agent any
     parameters {
       choice(name:"environment",choices:['DEV','UAT'],description:"ENVIRONMENT TO DEPLOY")
     }
