@@ -1,28 +1,42 @@
-pipeline {
+pipeline{
     agent any
-    options {
-        skipStagesAfterUnstable()
+    parameters {
+      choice(name:"environment",choices:['DEV','UAT'],description:"ENVIRONMENT TO DEPLOY")
     }
-    stages {
-        stage('Build') {
+    options {
+        buildDiscarder(logRotator(numToKeepStr:'5')
+                       }
+    stages{
+        stage('Checkout') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                checkout scm
             }
         }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        
         stage('Test') {
             steps {
                 sh 'mvn test'
             }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Deliver') { 
-            steps {
-                sh './jenkins/scripts/deliver.sh' 
-            }
         }
     }
+    post{
+        always{
+            echo "Pipeline ran in ${params.environment}"
+        }
+        success{
+            echo "built and tested"
+        }
+        failure{
+            echo "pipeline failed"
+        }
+
 }
+        
+        
+            
+                       
+    
