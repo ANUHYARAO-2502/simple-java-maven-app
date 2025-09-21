@@ -4,8 +4,10 @@ pipeline{
     parameters {
       choice(name:"environment",choices:['DEV','UAT'],description:"ENVIRONMENT TO DEPLOY")
     }
-    options {
-        buildDiscarder(logRotator(numToKeepStr:'5')
+    options { 
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
+
     }
     stages{
         stage('Checkout') {
